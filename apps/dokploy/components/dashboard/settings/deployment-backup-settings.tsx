@@ -104,7 +104,7 @@ export const DeploymentBackupSettings = ({ serviceId, serviceType }: Props) => {
 	useEffect(() => {
 		if (service) {
 			const validBackupIds =
-				serviceType === "compose"
+				serviceType === "compose" && "deployBackupIds" in service
 					? service.deployBackupIds?.filter(
 							(id: string | null) => id !== null,
 						) || []

@@ -26,7 +26,6 @@ const baseApp: ApplicationNested = {
 	deployments: [],
 	cleanCache: false,
 	deployBackupEnabled: false,
-	deployBackupIds: [],
 	deployVolumeBackupIds: [],
 	applicationStatus: "done",
 	endpointSpecSwarm: null,

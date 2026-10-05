@@ -51,7 +51,6 @@ const baseApp: ApplicationNested = {
 	watchPaths: [],
 	rollbackRegistryId: "",
 	deployBackupEnabled: false,
-	deployBackupIds: [],
 	deployVolumeBackupIds: [],
 	rollbackRegistry: null,
 	deployments: [],
