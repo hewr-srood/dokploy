@@ -237,6 +237,11 @@ export const applications = pgTable("application", {
 	detachDokployNetwork: boolean("detachDokployNetwork")
 		.notNull()
 		.default(false),
+	deployBackupEnabled: boolean("deployBackupEnabled")
+		.notNull()
+		.default(false),
+	deployBackupId: text("deployBackupId"),
+	deployVolumeBackupId: text("deployVolumeBackupId"),
 });
 
 export const applicationsRelations = relations(
@@ -381,6 +386,9 @@ const createSchema = createInsertSchema(applications, {
 	networkIds: z.array(z.string()).optional(),
 	detachDokployNetwork: z.boolean().optional(),
 	cleanCache: z.boolean().optional(),
+	deployBackupEnabled: z.boolean().optional(),
+	deployBackupId: z.string().optional(),
+	deployVolumeBackupId: z.string().optional(),
 	stopGracePeriodSwarm: z.number().nullable(),
 	endpointSpecSwarm: EndpointSpecSwarmSchema.nullable(),
 	ulimitsSwarm: UlimitsSwarmSchema.nullable(),

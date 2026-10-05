@@ -2,6 +2,7 @@ import {
 	createBackup,
 	findBackupById,
 	findBackupsByDbId,
+	findBackupsByComposeId,
 	findComposeByBackupId,
 	findComposeById,
 	findLibsqlByBackupId,
@@ -628,5 +629,13 @@ export const backupRouter = createTRPCRouter({
 					return;
 				}
 			}
+		}),
+	allByCompose: protectedProcedure
+		.input(z.object({ composeId: z.string().min(1) }))
+		.query(async ({ input, ctx }) => {
+			await checkServicePermissionAndAccess(ctx, input.composeId, {
+				backup: ["read"],
+			});
+			return await findBackupsByComposeId(input.composeId);
 		}),
 });

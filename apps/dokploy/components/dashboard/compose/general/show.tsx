@@ -7,6 +7,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { api } from "@/utils/api";
+import { DeploymentBackupSettings } from "../../settings/deployment-backup-settings";
 import { ComposeActions } from "./actions";
 import { ShowProviderFormCompose } from "./generic/show";
 
@@ -21,6 +22,9 @@ export const ShowGeneralCompose = ({ composeId }: Props) => {
 			enabled: !!composeId,
 		},
 	);
+
+	const { data: permissions } = api.user.getPermissions.useQuery();
+	const canUpdateService = permissions?.service.create ?? false;
 
 	return (
 		<>
@@ -42,6 +46,12 @@ export const ShowGeneralCompose = ({ composeId }: Props) => {
 				</CardContent>
 			</Card>
 			<ShowProviderFormCompose composeId={composeId} />
+			{canUpdateService && (
+				<DeploymentBackupSettings
+					serviceId={composeId}
+					serviceType="compose"
+				/>
+			)}
 		</>
 	);
 };

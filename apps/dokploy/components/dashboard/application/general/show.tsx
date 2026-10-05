@@ -11,6 +11,7 @@ import { Tooltip as TooltipPrimitive } from "radix-ui";
 import { toast } from "sonner";
 import { ShowBuildChooseForm } from "@/components/dashboard/application/build/show";
 import { ShowProviderForm } from "@/components/dashboard/application/general/generic/show";
+import { DeploymentBackupSettings } from "@/components/dashboard/settings/deployment-backup-settings";
 import { DialogAction } from "@/components/shared/dialog-action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -332,6 +333,12 @@ export const ShowGeneralApplication = ({ applicationId }: Props) => {
 			</Card>
 			<ShowProviderForm applicationId={applicationId} />
 			<ShowBuildChooseForm applicationId={applicationId} />
+			{canUpdateService && (
+				<DeploymentBackupSettings
+					serviceId={applicationId}
+					serviceType="application"
+				/>
+			)}
 		</>
 	);
 };
