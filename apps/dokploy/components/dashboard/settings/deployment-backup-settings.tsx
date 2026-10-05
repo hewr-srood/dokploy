@@ -162,8 +162,8 @@ export const DeploymentBackupSettings = ({ serviceId, serviceType }: Props) => {
 
 	const backupsPath =
 		serviceType === "application"
-			? `/dashboard/project/${service?.environment?.projectId}/services/application/${serviceId}?tab=backups`
-			: `/dashboard/project/${service?.environment?.projectId}/services/compose/${serviceId}?tab=backups`;
+			? `/dashboard/project/${service?.environment?.projectId}/environment/${service?.environmentId}/services/application/${serviceId}?tab=volume-backups`
+			: `/dashboard/project/${service?.environment?.projectId}/environment/${service?.environmentId}/services/compose/${serviceId}?tab=backups`;
 
 	return (
 		<Card className="group relative w-full bg-transparent">
