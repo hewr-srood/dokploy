@@ -66,23 +66,18 @@ export const DeploymentBackupSettings = ({
 	const { mutateAsync: updateCompose } = api.compose.update.useMutation();
 
 	const { data: backups, isLoading: isLoadingBackups } =
-		serviceType === "application"
-			? api.backup.allByApplication.useQuery(
-					{ applicationId: serviceId },
-					{ enabled: !!serviceId },
-				)
-			: api.backup.allByCompose.useQuery(
-					{ composeId: serviceId },
-					{ enabled: !!serviceId },
-				);
+		api.backup.allByCompose.useQuery(
+			{ composeId: serviceId },
+			{ enabled: serviceType === "compose" && !!serviceId },
+		);
 
 	const { data: volumeBackups, isLoading: isLoadingVolumeBackups } =
 		serviceType === "application"
-			? api.volumeBackup.allByApplication.useQuery(
+			? api.volumeBackups.allByApplication.useQuery(
 					{ applicationId: serviceId },
 					{ enabled: !!serviceId },
 				)
-			: api.volumeBackup.allByCompose.useQuery(
+			: api.volumeBackups.allByCompose.useQuery(
 					{ composeId: serviceId },
 					{ enabled: !!serviceId },
 				);
@@ -178,9 +173,9 @@ export const DeploymentBackupSettings = ({
 					)}
 				/>
 
-				{watchEnabled && (
+					{watchEnabled && (
 					<>
-						{backups && backups.length > 0 && (
+						{serviceType === "compose" && backups && backups.length > 0 && (
 							<FormField
 								control={form.control}
 								name="deployBackupId"
@@ -201,10 +196,10 @@ export const DeploymentBackupSettings = ({
 															? "Loading..."
 															: field.value
 																? backups?.find(
-																		(backup) => backup.backupId === field.value,
+																		(backup: any) => backup.backupId === field.value,
 																	)?.prefix ||
 																	backups?.find(
-																		(backup) => backup.backupId === field.value,
+																		(backup: any) => backup.backupId === field.value,
 																	)?.database
 																: "Select Database Backup"}
 														<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -233,7 +228,7 @@ export const DeploymentBackupSettings = ({
 																	)}
 																/>
 															</CommandItem>
-															{backups?.map((backup) => (
+															{backups?.map((backup: any) => (
 																<CommandItem
 																	value={backup.backupId}
 																	key={backup.backupId}
@@ -290,7 +285,7 @@ export const DeploymentBackupSettings = ({
 															? "Loading..."
 															: field.value
 																? volumeBackups?.find(
-																		(backup) =>
+																		(backup: any) =>
 																			backup.volumeBackupId === field.value,
 																	)?.name
 																: "Select Volume Backup"}
@@ -323,7 +318,7 @@ export const DeploymentBackupSettings = ({
 																	)}
 																/>
 															</CommandItem>
-															{volumeBackups?.map((backup) => (
+															{volumeBackups?.map((backup: any) => (
 																<CommandItem
 																	value={backup.volumeBackupId}
 																	key={backup.volumeBackupId}
@@ -359,11 +354,13 @@ export const DeploymentBackupSettings = ({
 							/>
 						)}
 
-						{(!backups || backups.length === 0) &&
+						{((serviceType === "compose" && (!backups || backups.length === 0)) ||
+							serviceType === "application") &&
 							(!volumeBackups || volumeBackups.length === 0) && (
 								<div className="text-sm text-muted-foreground border rounded-lg p-4 bg-muted/50">
-									No backup configurations found. Create a database backup or
-									volume backup first to enable backup on deploy.
+									{serviceType === "application"
+										? "No volume backup configurations found. Create a volume backup first to enable backup on deploy."
+										: "No backup configurations found. Create a database backup or volume backup first to enable backup on deploy."}
 								</div>
 							)}
 					</>
