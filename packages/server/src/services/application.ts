@@ -201,13 +201,12 @@ export const deployApplication = async ({
 	try {
 		if (
 			application.deployBackupEnabled &&
-			((application.deployBackupIds && application.deployBackupIds.length > 0) ||
-				(application.deployVolumeBackupIds &&
-					application.deployVolumeBackupIds.length > 0))
+			application.deployVolumeBackupIds &&
+			application.deployVolumeBackupIds.length > 0
 		) {
 			const { runDeploymentBackups } = await import("./deployment-backup");
 			await runDeploymentBackups({
-				deployBackupIds: application.deployBackupIds || [],
+				deployBackupIds: [],
 				deployVolumeBackupIds: application.deployVolumeBackupIds || [],
 				logPath: deployment.logPath,
 				serverId,
@@ -329,13 +328,12 @@ export const rebuildApplication = async ({
 	try {
 		if (
 			application.deployBackupEnabled &&
-			((application.deployBackupIds && application.deployBackupIds.length > 0) ||
-				(application.deployVolumeBackupIds &&
-					application.deployVolumeBackupIds.length > 0))
+			application.deployVolumeBackupIds &&
+			application.deployVolumeBackupIds.length > 0
 		) {
 			const { runDeploymentBackups } = await import("./deployment-backup");
 			await runDeploymentBackups({
-				deployBackupIds: application.deployBackupIds || [],
+				deployBackupIds: [],
 				deployVolumeBackupIds: application.deployVolumeBackupIds || [],
 				logPath: deployment.logPath,
 				serverId,

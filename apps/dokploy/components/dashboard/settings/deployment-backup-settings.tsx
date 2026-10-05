@@ -104,8 +104,11 @@ export const DeploymentBackupSettings = ({ serviceId, serviceType }: Props) => {
 	useEffect(() => {
 		if (service) {
 			const validBackupIds =
-				service.deployBackupIds?.filter((id: string | null) => id !== null) ||
-				[];
+				serviceType === "compose"
+					? service.deployBackupIds?.filter(
+							(id: string | null) => id !== null,
+						) || []
+					: [];
 			const validVolumeBackupIds =
 				service.deployVolumeBackupIds?.filter(
 					(id: string | null) => id !== null,
@@ -117,7 +120,7 @@ export const DeploymentBackupSettings = ({ serviceId, serviceType }: Props) => {
 				deployVolumeBackupIds: validVolumeBackupIds,
 			});
 		}
-	}, [service, form.reset]);
+	}, [service, form.reset, serviceType]);
 
 	const onSubmit = async (data: z.infer<typeof Schema>) => {
 		try {
@@ -126,12 +129,21 @@ export const DeploymentBackupSettings = ({ serviceId, serviceType }: Props) => {
 			const idField =
 				serviceType === "application" ? "applicationId" : "composeId";
 
-			await updateFn({
-				[idField]: serviceId,
-				deployBackupEnabled: data.deployBackupEnabled,
-				deployBackupIds: data.deployBackupIds || [],
-				deployVolumeBackupIds: data.deployVolumeBackupIds || [],
-			} as any);
+			const updatePayload =
+				serviceType === "application"
+					? {
+							[idField]: serviceId,
+							deployBackupEnabled: data.deployBackupEnabled,
+							deployVolumeBackupIds: data.deployVolumeBackupIds || [],
+						}
+					: {
+							[idField]: serviceId,
+							deployBackupEnabled: data.deployBackupEnabled,
+							deployBackupIds: data.deployBackupIds || [],
+							deployVolumeBackupIds: data.deployVolumeBackupIds || [],
+						};
+
+			await updateFn(updatePayload as any);
 
 			toast.success("Deployment backup settings updated");
 			await refetch();

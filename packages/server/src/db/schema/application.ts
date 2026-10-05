@@ -242,7 +242,6 @@ export const applications = pgTable("application", {
 	deployBackupEnabled: boolean("deployBackupEnabled")
 		.notNull()
 		.default(false),
-	deployBackupIds: text("deployBackupIds").array().default([]),
 	deployVolumeBackupIds: text("deployVolumeBackupIds").array().default([]),
 });
 
@@ -389,7 +388,6 @@ const createSchema = createInsertSchema(applications, {
 	detachDokployNetwork: z.boolean().optional(),
 	cleanCache: z.boolean().optional(),
 	deployBackupEnabled: z.boolean().optional(),
-	deployBackupIds: z.array(z.string()).optional(),
 	deployVolumeBackupIds: z.array(z.string()).optional(),
 	stopGracePeriodSwarm: z.number().nullable(),
 	endpointSpecSwarm: EndpointSpecSwarmSchema.nullable(),
