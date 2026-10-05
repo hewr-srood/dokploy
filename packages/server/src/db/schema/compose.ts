@@ -24,6 +24,7 @@ import { schedules } from "./schedule";
 import { server } from "./server";
 import { applicationStatus, triggerType } from "./shared";
 import { sshKeys } from "./ssh-key";
+import { volumeBackups } from "./volume-backups";
 import {
 	APP_NAME_MESSAGE,
 	APP_NAME_REGEX,
@@ -97,6 +98,7 @@ export const compose = pgTable("compose", {
 	isolatedDeploymentsVolume: boolean("isolatedDeploymentsVolume")
 		.notNull()
 		.default(false),
+	pullImages: boolean("pullImages").notNull().default(false),
 	triggerType: triggerType("triggerType").default("push"),
 	composeStatus: applicationStatus("composeStatus").notNull().default("idle"),
 	icon: text("icon"),
@@ -131,6 +133,11 @@ export const compose = pgTable("compose", {
 			}>
 		>()
 		.default([]),
+	deployBackupEnabled: boolean("deployBackupEnabled")
+		.notNull()
+		.default(false),
+	deployBackupIds: text("deployBackupIds").array().default([]),
+	deployVolumeBackupIds: text("deployVolumeBackupIds").array().default([]),
 });
 
 export const composeRelations = relations(compose, ({ one, many }) => ({
@@ -207,6 +214,9 @@ const createSchema = createInsertSchema(compose, {
 			}),
 		)
 		.optional(),
+	deployBackupEnabled: z.boolean().optional(),
+	deployBackupIds: z.array(z.string()).optional(),
+	deployVolumeBackupIds: z.array(z.string()).optional(),
 });
 
 export const apiCreateCompose = createSchema.pick({

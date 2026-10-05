@@ -12,6 +12,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import { nanoid } from "nanoid";
 import { z } from "zod";
+import { backups } from "./backups";
 import { bitbucket } from "./bitbucket";
 import { deployments } from "./deployment";
 import { domains } from "./domain";
@@ -27,6 +28,7 @@ import { redirects } from "./redirects";
 import { registry } from "./registry";
 import { security } from "./security";
 import { server } from "./server";
+import { volumeBackups } from "./volume-backups";
 import {
 	applicationStatus,
 	certificateType,
@@ -237,6 +239,10 @@ export const applications = pgTable("application", {
 	detachDokployNetwork: boolean("detachDokployNetwork")
 		.notNull()
 		.default(false),
+	deployBackupEnabled: boolean("deployBackupEnabled")
+		.notNull()
+		.default(false),
+	deployVolumeBackupIds: text("deployVolumeBackupIds").array().default([]),
 });
 
 export const applicationsRelations = relations(
@@ -381,6 +387,8 @@ const createSchema = createInsertSchema(applications, {
 	networkIds: z.array(z.string()).optional(),
 	detachDokployNetwork: z.boolean().optional(),
 	cleanCache: z.boolean().optional(),
+	deployBackupEnabled: z.boolean().optional(),
+	deployVolumeBackupIds: z.array(z.string()).optional(),
 	stopGracePeriodSwarm: z.number().nullable(),
 	endpointSpecSwarm: EndpointSpecSwarmSchema.nullable(),
 	ulimitsSwarm: UlimitsSwarmSchema.nullable(),

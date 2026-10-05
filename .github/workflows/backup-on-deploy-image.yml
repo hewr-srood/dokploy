@@ -1,0 +1,65 @@
+name: Backup-on-Deploy image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cursor/deployment-backup-toggle-6c47
+    paths:
+      - ".github/workflows/backup-on-deploy-image.yml"
+      - "Dockerfile"
+      - "apps/dokploy/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/hewr-srood/dokploy:backup-on-deploy
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare env file
+        run: |
+          cp apps/dokploy/.env.production.example .env.production
+          cp apps/dokploy/.env.production.example apps/dokploy/.env.production
+
+      - name: Build and push linux/amd64
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.IMAGE }}
+          no-cache: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Make package public (best-effort)
+        continue-on-error: true
+        run: |
+          curl -sS -X PATCH \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/user/packages/container/dokploy/visibility" \
+            -d '{"visibility":"public"}' \
+            -w "\nHTTP %{http_code}\n"

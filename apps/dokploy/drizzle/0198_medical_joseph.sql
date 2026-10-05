@@ -1,0 +1,4 @@
+ALTER TABLE "application" ADD CONSTRAINT "application_deployBackupId_backup_backupId_fk" FOREIGN KEY ("deployBackupId") REFERENCES "public"."backup"("backupId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "application" ADD CONSTRAINT "application_deployVolumeBackupId_volume_backup_volumeBackupId_fk" FOREIGN KEY ("deployVolumeBackupId") REFERENCES "public"."volume_backup"("volumeBackupId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "compose" ADD CONSTRAINT "compose_deployBackupId_backup_backupId_fk" FOREIGN KEY ("deployBackupId") REFERENCES "public"."backup"("backupId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "compose" ADD CONSTRAINT "compose_deployVolumeBackupId_volume_backup_volumeBackupId_fk" FOREIGN KEY ("deployVolumeBackupId") REFERENCES "public"."volume_backup"("volumeBackupId") ON DELETE set null ON UPDATE no action;

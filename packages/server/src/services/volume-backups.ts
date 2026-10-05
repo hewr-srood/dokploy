@@ -137,3 +137,37 @@ export const updateVolumeBackup = async (
 		.returning()
 		.then((e) => e[0]);
 };
+
+export const findVolumeBackupsByApplicationId = async (
+	applicationId: string,
+) => {
+	const result = await db.query.volumeBackups.findMany({
+		where: eq(volumeBackups.applicationId, applicationId),
+		with: {
+			application: true,
+			destination: {
+				columns: {
+					accessKey: false,
+					secretAccessKey: false,
+				},
+			},
+		},
+	});
+	return result || [];
+};
+
+export const findVolumeBackupsByComposeId = async (composeId: string) => {
+	const result = await db.query.volumeBackups.findMany({
+		where: eq(volumeBackups.composeId, composeId),
+		with: {
+			compose: true,
+			destination: {
+				columns: {
+					accessKey: false,
+					secretAccessKey: false,
+				},
+			},
+		},
+	});
+	return result || [];
+};

@@ -248,6 +248,20 @@ export const deployCompose = async ({
 	});
 
 	try {
+		if (
+			compose.deployBackupEnabled &&
+			((compose.deployBackupIds && compose.deployBackupIds.length > 0) ||
+				(compose.deployVolumeBackupIds &&
+					compose.deployVolumeBackupIds.length > 0))
+		) {
+			const { runDeploymentBackups } = await import("./deployment-backup");
+			await runDeploymentBackups({
+				deployBackupIds: compose.deployBackupIds || [],
+				deployVolumeBackupIds: compose.deployVolumeBackupIds || [],
+				logPath: deployment.logPath,
+				serverId: compose.serverId,
+			});
+		}
 		const entity = {
 			...compose,
 			type: "compose" as const,
@@ -387,6 +401,20 @@ export const rebuildCompose = async ({
 	});
 
 	try {
+		if (
+			compose.deployBackupEnabled &&
+			((compose.deployBackupIds && compose.deployBackupIds.length > 0) ||
+				(compose.deployVolumeBackupIds &&
+					compose.deployVolumeBackupIds.length > 0))
+		) {
+			const { runDeploymentBackups } = await import("./deployment-backup");
+			await runDeploymentBackups({
+				deployBackupIds: compose.deployBackupIds || [],
+				deployVolumeBackupIds: compose.deployVolumeBackupIds || [],
+				logPath: deployment.logPath,
+				serverId: compose.serverId,
+			});
+		}
 		let command = "set -e;";
 		if (compose.sourceType === "raw") {
 			command += getCreateComposeFileCommand(compose);

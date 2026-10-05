@@ -1,6 +1,8 @@
 import {
 	createVolumeBackup,
 	findVolumeBackupById,
+	findVolumeBackupsByApplicationId,
+	findVolumeBackupsByComposeId,
 	IS_CLOUD,
 	removeVolumeBackup,
 	removeVolumeBackupJob,
@@ -365,5 +367,21 @@ export const volumeBackupsRouter = createTRPCRouter({
 				// Start the restore process
 				runRestore();
 			});
+		}),
+	allByApplication: protectedProcedure
+		.input(z.object({ applicationId: z.string().min(1) }))
+		.query(async ({ input, ctx }) => {
+			await checkServicePermissionAndAccess(ctx, input.applicationId, {
+				volumeBackup: ["read"],
+			});
+			return await findVolumeBackupsByApplicationId(input.applicationId);
+		}),
+	allByCompose: protectedProcedure
+		.input(z.object({ composeId: z.string().min(1) }))
+		.query(async ({ input, ctx }) => {
+			await checkServicePermissionAndAccess(ctx, input.composeId, {
+				volumeBackup: ["read"],
+			});
+			return await findVolumeBackupsByComposeId(input.composeId);
 		}),
 });

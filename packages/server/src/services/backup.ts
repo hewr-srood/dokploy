@@ -98,3 +98,35 @@ export const findBackupsByDbId = async (
 	});
 	return result || [];
 };
+
+export const findBackupsByComposeId = async (composeId: string) => {
+	const result = await db.query.backups.findMany({
+		where: eq(backups.composeId, composeId),
+		with: {
+			compose: true,
+			destination: {
+				columns: {
+					accessKey: false,
+					secretAccessKey: false,
+				},
+			},
+		},
+	});
+	return result || [];
+};
+
+export const findBackupsByApplicationId = async (applicationId: string) => {
+	const result = await db.query.backups.findMany({
+		where: eq(backups.postgresId, applicationId),
+		with: {
+			postgres: true,
+			destination: {
+				columns: {
+					accessKey: false,
+					secretAccessKey: false,
+				},
+			},
+		},
+	});
+	return result || [];
+};
