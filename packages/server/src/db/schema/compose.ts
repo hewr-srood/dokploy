@@ -136,8 +136,8 @@ export const compose = pgTable("compose", {
 	deployBackupEnabled: boolean("deployBackupEnabled")
 		.notNull()
 		.default(false),
-	deployBackupId: text("deployBackupId"),
-	deployVolumeBackupId: text("deployVolumeBackupId"),
+	deployBackupIds: text("deployBackupIds").array().default([]),
+	deployVolumeBackupIds: text("deployVolumeBackupIds").array().default([]),
 });
 
 export const composeRelations = relations(compose, ({ one, many }) => ({
@@ -215,8 +215,8 @@ const createSchema = createInsertSchema(compose, {
 		)
 		.optional(),
 	deployBackupEnabled: z.boolean().optional(),
-	deployBackupId: z.string().optional(),
-	deployVolumeBackupId: z.string().optional(),
+	deployBackupIds: z.array(z.string()).optional(),
+	deployVolumeBackupIds: z.array(z.string()).optional(),
 });
 
 export const apiCreateCompose = createSchema.pick({

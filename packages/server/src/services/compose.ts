@@ -250,12 +250,14 @@ export const deployCompose = async ({
 	try {
 		if (
 			compose.deployBackupEnabled &&
-			(compose.deployBackupId || compose.deployVolumeBackupId)
+			((compose.deployBackupIds && compose.deployBackupIds.length > 0) ||
+				(compose.deployVolumeBackupIds &&
+					compose.deployVolumeBackupIds.length > 0))
 		) {
 			const { runDeploymentBackups } = await import("./deployment-backup");
 			await runDeploymentBackups({
-				deployBackupId: compose.deployBackupId,
-				deployVolumeBackupId: compose.deployVolumeBackupId,
+				deployBackupIds: compose.deployBackupIds || [],
+				deployVolumeBackupIds: compose.deployVolumeBackupIds || [],
 				logPath: deployment.logPath,
 				serverId: compose.serverId,
 			});
@@ -401,12 +403,14 @@ export const rebuildCompose = async ({
 	try {
 		if (
 			compose.deployBackupEnabled &&
-			(compose.deployBackupId || compose.deployVolumeBackupId)
+			((compose.deployBackupIds && compose.deployBackupIds.length > 0) ||
+				(compose.deployVolumeBackupIds &&
+					compose.deployVolumeBackupIds.length > 0))
 		) {
 			const { runDeploymentBackups } = await import("./deployment-backup");
 			await runDeploymentBackups({
-				deployBackupId: compose.deployBackupId,
-				deployVolumeBackupId: compose.deployVolumeBackupId,
+				deployBackupIds: compose.deployBackupIds || [],
+				deployVolumeBackupIds: compose.deployVolumeBackupIds || [],
 				logPath: deployment.logPath,
 				serverId: compose.serverId,
 			});
