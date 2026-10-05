@@ -84,10 +84,6 @@ export const DeploymentBackupSettings = ({
 	const hasDeployments =
 		service && service.deployments && service.deployments.length > 0;
 
-	if (!hasDeployments) {
-		return null;
-	}
-
 	const [databaseBackupOpen, setDatabaseBackupOpen] = useState(false);
 	const [volumeBackupOpen, setVolumeBackupOpen] = useState(false);
 
@@ -181,13 +177,25 @@ export const DeploymentBackupSettings = ({
 					</FormDescription>
 				</div>
 
+				{!hasDeployments && (
+					<div className="flex flex-col gap-2 border rounded-lg p-4 bg-muted/30">
+						<InfoIcon className="size-5 text-muted-foreground" />
+						<span className="text-sm text-muted-foreground">
+							Backup on Deploy will be available after your first deployment.
+							Deploy this service once to enable this feature.
+						</span>
+					</div>
+				)}
+
 				<FormField
 					control={form.control}
 					name="deployBackupEnabled"
 					render={({ field }) => (
 						<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
 							<div className="space-y-0.5">
-								<FormLabel>Enable Backup on Deploy</FormLabel>
+								<FormLabel className={cn(!hasDeployments && "text-muted-foreground")}>
+									Enable Backup on Deploy
+								</FormLabel>
 								<FormDescription>
 									Run backups before each deployment
 								</FormDescription>
@@ -196,13 +204,14 @@ export const DeploymentBackupSettings = ({
 								<Switch
 									checked={field.value}
 									onCheckedChange={field.onChange}
+									disabled={!hasDeployments}
 								/>
 							</FormControl>
 						</FormItem>
 					)}
 				/>
 
-				{watchEnabled && (
+				{watchEnabled && hasDeployments && (
 					<>
 						{!hasBackups ? (
 							<div className="flex flex-col items-center gap-3 min-h-[15vh] justify-center border rounded-lg p-6">
