@@ -16,6 +16,7 @@ export * from "./services/certificate";
 export * from "./services/cluster";
 export * from "./services/compose";
 export * from "./services/deployment";
+export * from "./services/deployment-backup";
 export * from "./services/destination";
 export * from "./services/dns-provider";
 export * from "./services/docker";

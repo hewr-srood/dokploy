@@ -199,6 +199,18 @@ export const deployApplication = async ({
 	});
 
 	try {
+		if (
+			application.deployBackupEnabled &&
+			(application.deployBackupId || application.deployVolumeBackupId)
+		) {
+			const { runDeploymentBackups } = await import("./deployment-backup");
+			await runDeploymentBackups({
+				deployBackupId: application.deployBackupId,
+				deployVolumeBackupId: application.deployVolumeBackupId,
+				logPath: deployment.logPath,
+				serverId,
+			});
+		}
 		let command = "set -e;";
 		if (application.sourceType === "github") {
 			command += await cloneGithubRepository(applicationEntity);
@@ -313,6 +325,18 @@ export const rebuildApplication = async ({
 	});
 
 	try {
+		if (
+			application.deployBackupEnabled &&
+			(application.deployBackupId || application.deployVolumeBackupId)
+		) {
+			const { runDeploymentBackups } = await import("./deployment-backup");
+			await runDeploymentBackups({
+				deployBackupId: application.deployBackupId,
+				deployVolumeBackupId: application.deployVolumeBackupId,
+				logPath: deployment.logPath,
+				serverId,
+			});
+		}
 		let command = "set -e;";
 		// Check case for docker only
 		command += await getBuildCommand(application);

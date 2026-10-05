@@ -248,6 +248,18 @@ export const deployCompose = async ({
 	});
 
 	try {
+		if (
+			compose.deployBackupEnabled &&
+			(compose.deployBackupId || compose.deployVolumeBackupId)
+		) {
+			const { runDeploymentBackups } = await import("./deployment-backup");
+			await runDeploymentBackups({
+				deployBackupId: compose.deployBackupId,
+				deployVolumeBackupId: compose.deployVolumeBackupId,
+				logPath: deployment.logPath,
+				serverId: compose.serverId,
+			});
+		}
 		const entity = {
 			...compose,
 			type: "compose" as const,
@@ -387,6 +399,18 @@ export const rebuildCompose = async ({
 	});
 
 	try {
+		if (
+			compose.deployBackupEnabled &&
+			(compose.deployBackupId || compose.deployVolumeBackupId)
+		) {
+			const { runDeploymentBackups } = await import("./deployment-backup");
+			await runDeploymentBackups({
+				deployBackupId: compose.deployBackupId,
+				deployVolumeBackupId: compose.deployVolumeBackupId,
+				logPath: deployment.logPath,
+				serverId: compose.serverId,
+			});
+		}
 		let command = "set -e;";
 		if (compose.sourceType === "raw") {
 			command += getCreateComposeFileCommand(compose);

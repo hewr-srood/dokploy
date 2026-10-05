@@ -24,6 +24,7 @@ import { schedules } from "./schedule";
 import { server } from "./server";
 import { applicationStatus, triggerType } from "./shared";
 import { sshKeys } from "./ssh-key";
+import { volumeBackups } from "./volume-backups";
 import {
 	APP_NAME_MESSAGE,
 	APP_NAME_REGEX,
