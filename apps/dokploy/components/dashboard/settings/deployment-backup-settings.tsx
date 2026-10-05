@@ -164,7 +164,7 @@ export const DeploymentBackupSettings = ({ serviceId, serviceType }: Props) => {
 		serviceType === "application"
 			? `/dashboard/project/${service?.environment?.projectId}/environment/${service?.environmentId}/services/application/${serviceId}?tab=volume-backups`
 			: `/dashboard/project/${service?.environment?.projectId}/environment/${service?.environmentId}/services/compose/${serviceId}?tab=backups`;
-
+	// Fixed: Include environment segment in URLs (Oct 5, 2026)
 	return (
 		<Card className="group relative w-full bg-transparent">
 			<CardHeader>
