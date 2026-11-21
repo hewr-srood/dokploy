@@ -1,3 +1,4 @@
+import { DeploymentBackupSettings } from "@/components/dashboard/settings/deployment-backup-settings";
 import { Badge } from "@/components/ui/badge";
 import {
 	Card,
@@ -21,6 +22,8 @@ export const ShowGeneralCompose = ({ composeId }: Props) => {
 			enabled: !!composeId,
 		},
 	);
+	const { data: permissions } = api.user.getPermissions.useQuery();
+	const canUpdateService = permissions?.service.create ?? false;
 
 	return (
 		<>
@@ -42,6 +45,9 @@ export const ShowGeneralCompose = ({ composeId }: Props) => {
 				</CardContent>
 			</Card>
 			<ShowProviderFormCompose composeId={composeId} />
+			{canUpdateService && (
+				<DeploymentBackupSettings serviceId={composeId} serviceType="compose" />
+			)}
 		</>
 	);
 };
